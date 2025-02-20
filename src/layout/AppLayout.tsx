@@ -20,8 +20,9 @@ const LayoutContent: React.FC = () => {
         } ${isMobileOpen ? "ml-0" : ""}`}
       >
         <AppHeader />
-        <div className="p-4 mx-auto max-w-screen-2xl md:p-6 ">
+        <div className="p-4 mx-auto max-w-screen-2xl md:p-6 m-0   ">
           <Outlet />
+          {/*//es para que se renderice el contenido de las rutas */}
         </div>
       </div>
     </div>

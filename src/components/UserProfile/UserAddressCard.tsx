@@ -6,7 +6,7 @@ import Input from "../form/InputField";
 import Label from "../form/Label";
 import { FaEdit } from "react-icons/fa";
 
-export default function TarjetaDireccionUsuario() {
+export default function UserAddressCard() {
   const { isOpen, openModal, closeModal } = useModal();
   const [direccion] = useState({
     pais: "Aregntina",
