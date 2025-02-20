@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 
 import PrivateRoute from "./PrivateRoute";
 import AppLayout from "../layout/AppLayout";
-import Ecommerce from "../pages/Dashboard/ECommerce";
+import Dashboard from "../pages/Dashboard/Dashboard";
 import UserProfiles from "../pages/UserProfiles";
 import AuthLayout from "../layout/AuthLayout";
 import SignIn from "../pages/AuthPages/SignIn";
@@ -15,7 +15,7 @@ export default function RoutesApp() {
       {/* Rutas protegidas */}
       <Route element={<PrivateRoute />}>
         <Route element={<AppLayout />}>
-          <Route index path="/" element={<Ecommerce />} />
+          <Route index path="/" element={<Dashboard />} />
           <Route path="/profile" element={<UserProfiles />} />
         </Route>
       </Route>
