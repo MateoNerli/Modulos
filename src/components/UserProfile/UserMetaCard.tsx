@@ -1,7 +1,7 @@
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
-import Input from "../form/input/InputField";
+import Input from "../form/InputField";
 import Label from "../form/Label";
 import { FaEdit, FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 

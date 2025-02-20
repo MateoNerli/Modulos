@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Input from "../../components/form/input/InputField";
+import Input from "../../components/form/InputField";
 import Label from "../../components/form/Label";
 import { Link } from "react-router";
-import Checkbox from "../../components/form/input/Checkbox";
+import Checkbox from "../../components/form/Checkbox";
 import Button from "../../components/ui/button/Button";
 import PageMeta from "../../components/common/PageMeta";
 import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
