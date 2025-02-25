@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import Input from "../../components/form/InputField";
+import Input from "../../components/form/Input";
 import Label from "../../components/form/Label";
 import Checkbox from "../../components/form/Checkbox";
 import PageMeta from "../../components/common/PageMeta";

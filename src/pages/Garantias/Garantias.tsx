@@ -49,18 +49,40 @@ const columns = [
   {
     key: "Acciones",
     label: "Acciones",
-    render: () => (
+    render: (row: any) => (
       <div className="flex gap-3">
-        <button className="flex items-center justify-center p-2 rounded-full bg-yellow-300 hover:bg-gray-200">
-          <FaEdit />
-        </button>
-        <button className="flex items-center justify-center p-2 rounded-full bg-red-500 hover:bg-gray-200 ">
+        <Link to={`/garantias/editar/${row.idGarantia}`}>
+          <button className="flex items-center justify-center p-2 rounded-full bg-yellow-300 hover:bg-gray-200">
+            <FaEdit />
+          </button>
+        </Link>
+        <button
+          className="flex items-center justify-center p-2 rounded-full bg-red-500 hover:bg-gray-200"
+          onClick={() => handleDelete(row.idGarantia)}
+        >
           <FaTrash />
         </button>
       </div>
     ),
   },
 ];
+
+const handleDelete = async (idGarantia: number) => {
+  try {
+    const response = await axios.delete(
+      `${import.meta.env.VITE_API_URL}/api/garantia/${idGarantia}`
+    );
+    console.log(
+      "Garantia eliminada:",
+      response.data
+        ? "garantia eliminada correctamente"
+        : "Error al eliminar garantia"
+    );
+    window.location.reload();
+  } catch (error) {
+    console.error("Error al eliminar garantai:", error);
+  }
+};
 
 export default function Garantias() {
   const [garantia, setGarantia] = useState<any[]>([]);

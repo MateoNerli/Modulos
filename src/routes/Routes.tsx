@@ -8,12 +8,12 @@ import SignIn from "../pages/AuthPages/SignIn";
 import SignUp from "../pages/AuthPages/SignUp";
 import NotFound from "../pages/OtherPage/NotFound";
 import Garantias from "../pages/Garantias/Garantias";
-import CrearGarantia from "../pages/Garantias/CrearGarantia";
+import FormGarantia from "../pages/Garantias/FormGarantia";
 import UserProfiles from "../pages/UserPages/UserProfiles";
 import Cuenta from "../pages/Cuentas/Cuenta";
-import CrearCuenta from "../pages/Cuentas/CrearCuenta";
 import Acreedor from "../pages/Acreedor/Acreedor";
 import CrearAcreedor from "../pages/Acreedor/CrearAcreedor";
+import FormCuenta from "../pages/Cuentas/FormCuenta";
 
 export default function RoutesApp() {
   return (
@@ -24,11 +24,11 @@ export default function RoutesApp() {
           <Route index path="/" element={<Dashboard />} />
           <Route path="/profile" element={<UserProfiles />} />
           <Route path="/garantias" element={<Garantias />} />
-          <Route path="/garantias/crear" element={<CrearGarantia />} />
-          {/* <Route path="/garantias/editar/:id" element={<CrearGarantia />} /> */}
+          <Route path="/garantias/crear" element={<FormGarantia />} />
+          <Route path="/garantias/editar/:id" element={<FormGarantia />} />
           <Route path="/cuenta" element={<Cuenta />} />
-          <Route path="/cuenta/crear" element={<CrearCuenta />} />
-          {/* <Route path="/cuenta/editar/:id" element={<CrearCuenta />} /> */}
+          <Route path="/cuenta/crear" element={<FormCuenta />} />
+          <Route path="/cuenta/editar/:id" element={<FormCuenta />} />
           <Route path="/acreedor" element={<Acreedor />} />
           <Route path="/acreedor/crear" element={<CrearAcreedor />} />
         </Route>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Input from "../../components/form/InputField";
+import Input from "../../components/form/Input";
 import Label from "../../components/form/Label";
 import { Link } from "react-router";
 import Checkbox from "../../components/form/Checkbox";

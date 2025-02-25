@@ -6,6 +6,7 @@ import {
   FaAngleDown,
   FaBars,
   FaBox,
+  FaCog,
   FaRegIdBadge,
   FaUser,
   FaUserCircle,
@@ -38,6 +39,15 @@ const navItems: NavItem[] = [
     icon: <FaBox />,
     name: "Garantias",
     subItems: [{ name: "Garantias", path: "/garantias", pro: false }],
+  },
+  {
+    icon: <FaCog />,
+    name: "Configuraciones",
+    subItems: [
+      { name: "Bancos", path: "/bancos", pro: false },
+      { name: "Roles", path: "/roles", pro: false },
+      { name: "Permisos", path: "/permisos", pro: false },
+    ],
   },
 ];
 

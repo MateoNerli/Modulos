@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import axios from "axios";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
@@ -53,30 +54,49 @@ const columns = [
   {
     key: "Acciones",
     label: "Acciones",
-    render: () => (
+    render: (row: any) => (
       <div className="flex gap-3">
-        <button className="flex items-center justify-center p-2 rounded-full bg-yellow-300 hover:bg-gray-200">
-          <FaEdit />
-        </button>
-        <button className="flex items-center justify-center p-2 rounded-full bg-red-500 hover:bg-gray-200 ">
+        <Link to={`/cuenta/editar/${row.idCuenta}`}>
+          <button className="flex items-center justify-center p-2 rounded-full bg-yellow-300 hover:bg-gray-200">
+            <FaEdit />
+          </button>
+        </Link>
+        <button
+          className="flex items-center justify-center p-2 rounded-full bg-red-500 hover:bg-gray-200"
+          onClick={() => handleDelete(row.idCuenta)}
+        >
           <FaTrash />
         </button>
       </div>
     ),
   },
 ];
-
+const handleDelete = async (idCuenta: number) => {
+  try {
+    const response = await axios.delete(
+      `${import.meta.env.VITE_API_URL}/api/cuenta?id=${idCuenta}`
+    );
+    console.log(
+      "Cuenta eliminada:",
+      response.data
+        ? "Cuenta eliminada correctamente"
+        : "Error al eliminar cuenta"
+    );
+    window.location.reload();
+  } catch (error) {
+    console.error("Error al eliminar cuenta:", error);
+  }
+};
 export default function Cuenta() {
   const [cuenta, setCuenta] = useState<any[]>([]);
 
-  // Fetch data from API
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/cuenta`
         );
-        console.log("Cuenta data:", response.data);
+        console.log("Cuentas:", response.data);
 
         setCuenta(response.data);
       } catch (error) {
