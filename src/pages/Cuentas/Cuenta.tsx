@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import axios from "axios";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
@@ -10,40 +9,45 @@ import { Link } from "react-router-dom";
 
 const columns = [
   {
-    key: "Tipo de garantia",
-    label: "Tipo de garantia",
+    key: "Nombre de cuenta",
+    label: "Nombre de cuenta",
     render: (row: any) => (
-      <span className="dark:text-gray-200">{row.tipoGarantia}</span>
+      <span className="dark:text-gray-200">{row.nombreCuenta}</span>
     ),
   },
   {
-    key: "Producto Comercial",
-    label: "Producto Comercial",
+    key: "Tipo de Documento",
+    label: "Tipo de Documento",
     render: (row: any) => (
-      <span className="dark:text-gray-200">{row.productoComercial}</span>
+      <span className="dark:text-gray-200">{row.tipoDeDocuemnto}</span>
     ),
   },
   {
-    key: "Divisa",
-    label: "Divisa",
+    key: "Número de Documento",
+    label: "Número de Documento",
     render: (row: any) => (
-      <span className="dark:text-gray-200">{row.divisa}</span>
+      <span className="dark:text-gray-200">{row.numeroDeDocumento}</span>
     ),
   },
   {
-    key: "Fecha de Carga",
-    label: "Fecha de Carga",
+    key: "Personería",
+    label: "Personería",
     render: (row: any) => (
-      <span className="dark:text-gray-200">
-        {new Date(row.fechaDeCarga).toLocaleDateString()}
-      </span>
+      <span className="dark:text-gray-200">{row.personeria}</span>
     ),
   },
   {
-    key: "Monto Bruto",
-    label: "Monto Bruto",
+    key: "Relación SGR",
+    label: "Relación SGR",
     render: (row: any) => (
-      <span className="dark:text-gray-200">{row.montoBruto}</span>
+      <span className="dark:text-gray-200">{row.relacionamientoSGR}</span>
+    ),
+  },
+  {
+    key: "Rol de la Cuenta",
+    label: "Rol de la Cuenta",
+    render: (row: any) => (
+      <span className="dark:text-gray-200">{row.rolCuenta}</span>
     ),
   },
   {
@@ -62,17 +66,19 @@ const columns = [
   },
 ];
 
-export default function Garantias() {
-  const [garantia, setGarantia] = useState<any[]>([]);
+export default function Cuenta() {
+  const [cuenta, setCuenta] = useState<any[]>([]);
 
   // Fetch data from API
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/garantia`
+          `${import.meta.env.VITE_API_URL}/api/cuenta`
         );
-        setGarantia(response.data);
+        console.log("Cuenta data:", response.data);
+
+        setCuenta(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -82,21 +88,21 @@ export default function Garantias() {
 
   return (
     <>
-      <PageMeta title="Garantias" />
+      <PageMeta title="Cuenta" />
       <PageBreadcrumb
-        pageTitle="Garantias"
+        pageTitle="Cuentas"
         paths={[
           { name: "Inicio", path: "/" },
-          { name: "Garantias", path: "/garantias" },
+          { name: "Cuenta", path: "/cuenta" },
         ]}
       />
       <div className="space-y-6 min-h-screen">
         <div className="flex justify-end">
-          <Link to="/garantias/crear">
-            <Button>Crear Garantia</Button>
+          <Link to="/cuenta/crear">
+            <Button>Crear Cuenta</Button>
           </Link>
         </div>
-        <DataTable columns={columns} data={garantia} defaultItemsPerPage={30} />
+        <DataTable columns={columns} data={cuenta} defaultItemsPerPage={30} />
       </div>
     </>
   );

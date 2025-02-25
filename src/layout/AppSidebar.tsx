@@ -2,7 +2,14 @@ import React, { useEffect, useCallback, useState, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
-import { FaAngleDown, FaBars, FaBox, FaRegIdBadge } from "react-icons/fa";
+import {
+  FaAngleDown,
+  FaBars,
+  FaBox,
+  FaRegIdBadge,
+  FaUser,
+  FaUserCircle,
+} from "react-icons/fa";
 
 type NavItem = {
   name: string;
@@ -16,6 +23,16 @@ const navItems: NavItem[] = [
     icon: <FaRegIdBadge />,
     name: "Dashboard",
     path: "/",
+  },
+  {
+    icon: <FaUser />,
+    name: "Cuenta",
+    path: "/cuenta",
+  },
+  {
+    icon: <FaUserCircle />,
+    name: "Acreedor",
+    path: "/acreedor",
   },
   {
     icon: <FaBox />,
