@@ -108,7 +108,7 @@ export default function Garantias() {
       <PageBreadcrumb
         pageTitle="Garantias"
         paths={[
-          { name: "Inicio", path: "/" },
+          { name: "Inicio", path: "/dashboard" },
           { name: "Garantias", path: "/garantias" },
         ]}
       />

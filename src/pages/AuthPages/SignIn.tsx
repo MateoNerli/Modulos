@@ -5,11 +5,48 @@ import { Link } from "react-router";
 import Checkbox from "../../components/form/Checkbox";
 import Button from "../../components/ui/button/Button";
 import PageMeta from "../../components/common/PageMeta";
-import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import axios from "axios";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(""); // Reset error message
+    setLoading(true); // Set loading to true during the request
+
+    // Simple client-side validation
+    if (!email || !password) {
+      setError("Por favor, completa todos los campos.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
+        { email, password }
+      );
+
+      // Save the JWT token in localStorage or cookies
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        // Redirect or handle successful login
+        window.location.href = "/dashboard";
+      }
+    } catch (err) {
+      setError("Credenciales incorrectas o problema en el servidor.");
+    } finally {
+      setLoading(false); // Set loading back to false after the request
+    }
+  };
+
   return (
     <>
       <PageMeta title="Ingresar" />
@@ -25,28 +62,18 @@ export default function SignIn() {
               </p>
             </div>
             <div>
-              <button className="flex items-center justify-center w-full gap-3 py-3 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-800 dark:text-white/90 dark:hover:bg-gray-700">
-                <FaGoogle className="text-xl" />
-                Ingresa con Google
-              </button>
-
-              <div className="relative py-3 sm:py-5">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200 dark:border-gray-800"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="p-2 text-gray-400 bg-white dark:bg-gray-900 sm:px-5 sm:py-2">
-                    Or
-                  </span>
-                </div>
-              </div>
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="space-y-6">
                   <div>
                     <Label>
                       Email <span className="text-error-500">*</span>{" "}
                     </Label>
-                    <Input placeholder="info@gmail.com" />
+                    <Input
+                      type="email"
+                      placeholder="info@gmail.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
                   </div>
                   <div>
                     <Label>
@@ -56,6 +83,8 @@ export default function SignIn() {
                       <Input
                         type={showPassword ? "text" : "password"}
                         placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                       <span
                         onClick={() => setShowPassword(!showPassword)}
@@ -77,19 +106,30 @@ export default function SignIn() {
                       </span>
                     </div>
                     <Link
-                      to="/"
+                      to="/forgot-password"
                       className="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
                     >
                       Olvidaste tu contraseña?
                     </Link>
                   </div>
                   <div>
-                    <Button className="w-full" size="sm">
-                      Ingresar
+                    <Button
+                      className="w-full"
+                      size="sm"
+                      type="submit"
+                      disabled={loading}
+                    >
+                      {loading ? "Cargando..." : "Ingresar"}
                     </Button>
                   </div>
                 </div>
               </form>
+
+              {error && (
+                <div className="mt-4 text-center text-red-600">
+                  <p>{error}</p>
+                </div>
+              )}
 
               <div className="mt-5">
                 <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">

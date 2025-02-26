@@ -23,7 +23,7 @@ const navItems: NavItem[] = [
   {
     icon: <FaRegIdBadge />,
     name: "Dashboard",
-    path: "/",
+    path: "/dashboard",
   },
   {
     icon: <FaUser />,
@@ -255,7 +255,7 @@ const AppSidebar: React.FC = () => {
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
-        <Link to="/">
+        <Link to="/dashboard">
           {isExpanded || isHovered || isMobileOpen ? (
             <img
               src="/images/logo/LogoHuman.png"

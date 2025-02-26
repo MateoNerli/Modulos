@@ -18,7 +18,7 @@ const AppHeader: React.FC = () => {
         <div className="flex items-center justify-between w-full gap-2 px-3 py-3 border-b border-gray-200 dark:border-gray-800 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0 lg:py-4">
           <SidebarToggle />
 
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/dashboard" className="flex items-center gap-2">
             <img className="w-64" src="./images/logo/logoSGR.png" alt="Logo" />
           </Link>
 

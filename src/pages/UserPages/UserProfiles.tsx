@@ -11,7 +11,7 @@ export default function UserProfiles() {
       <PageBreadcrumb
         pageTitle="Perfil"
         paths={[
-          { name: "Inicio", path: "/" },
+          { name: "Inicio", path: "/dashboard" },
           { name: "Perfil", path: "/profile" },
         ]}
       />

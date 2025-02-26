@@ -51,7 +51,7 @@ function CrearAcreedor() {
       <PageBreadcrumb
         pageTitle="Acreedores"
         paths={[
-          { name: "Inicio", path: "/" },
+          { name: "Inicio", path: "/dashboard" },
           { name: "Acreedores", path: "/acreedor" },
           { name: "Crear Acreedor", path: "/acreedor/crear" },
         ]}

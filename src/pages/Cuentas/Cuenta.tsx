@@ -112,7 +112,7 @@ export default function Cuenta() {
       <PageBreadcrumb
         pageTitle="Cuentas"
         paths={[
-          { name: "Inicio", path: "/" },
+          { name: "Inicio", path: "/dashboard" },
           { name: "Cuenta", path: "/cuenta" },
         ]}
       />

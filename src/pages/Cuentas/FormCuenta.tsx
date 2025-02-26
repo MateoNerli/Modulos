@@ -95,7 +95,7 @@ function FormCuenta() {
       <PageBreadcrumb
         pageTitle="Cuentas"
         paths={[
-          { name: "Inicio", path: "/" },
+          { name: "Inicio", path: "/dashboard" },
           { name: "Cuentas", path: "/cuenta" },
           {
             name: id ? "Editar Cuenta" : "Crear Cuenta",

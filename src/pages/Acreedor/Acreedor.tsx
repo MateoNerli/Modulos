@@ -103,7 +103,7 @@ export default function Acreedor() {
       <PageBreadcrumb
         pageTitle="Acreedores"
         paths={[
-          { name: "Inicio", path: "/" },
+          { name: "Inicio", path: "/dashboard" },
           { name: "Acreedor", path: "/acreedor" },
         ]}
       />

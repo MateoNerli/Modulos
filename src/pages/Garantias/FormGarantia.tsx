@@ -93,7 +93,7 @@ function FormGarantia() {
       <PageBreadcrumb
         pageTitle={"Garantía"}
         paths={[
-          { name: "Inicio", path: "/" },
+          { name: "Inicio", path: "/dashboard" },
           { name: "Garantías", path: "/garantias" },
           {
             name: isEditMode ? "Editar Garantía" : "Crear Garantía",

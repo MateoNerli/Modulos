@@ -1,14 +1,80 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import Input from "../../components/form/Input";
 import Label from "../../components/form/Label";
 import Checkbox from "../../components/form/Checkbox";
 import PageMeta from "../../components/common/PageMeta";
-import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [formData, setFormData] = useState({
+    nombre: "",
+    apellido: "",
+    email: "",
+    usuario: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  // Handler for input change
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  // Handler for form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!isChecked) {
+      setError("Debes aceptar los términos y condiciones.");
+      return;
+    }
+
+    if (
+      !formData.nombre ||
+      !formData.apellido ||
+      !formData.email ||
+      !formData.usuario ||
+      !formData.password
+    ) {
+      setError("Por favor, completa todos los campos.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/Auth/register`, // Assuming the register endpoint
+        {
+          nombre: formData.nombre,
+          apellido: formData.apellido,
+          email: formData.email,
+          usuario: formData.usuario,
+          password: formData.password,
+        }
+      );
+
+      if (response.status === 200) {
+        window.alert("Registro exitoso.");
+        navigate("/signin");
+      } else {
+        window.alert(response.data.message);
+        setError("Error en el registro, intenta de nuevo.");
+      }
+    } catch (error) {
+      setError("Hubo un error en el registro. Intenta nuevamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <PageMeta title="Register" />
@@ -23,30 +89,16 @@ export default function SignUp() {
         </div>
         <div className="flex flex-col flex-1 p-6 rounded-2xl sm:rounded-none sm:border-0 sm:p-8">
           <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
-            <div className="mb-5 sm:mb-8">
+            <div className="mb-6 text-center sm:mb-8">
               <h1 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white">
                 Registrarse
               </h1>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Ingresa tu email y password{" "}
+                Registrate para continuar
               </p>
             </div>
             <div>
-              <button className="flex items-center justify-center w-full gap-3 py-3 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-800 dark:text-white/90 dark:hover:bg-gray-700">
-                <FaGoogle className="text-xl" />
-                Ingresa con Google
-              </button>
-              <div className="relative py-3 sm:py-5">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200 dark:border-gray-800"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="p-2 text-gray-400 bg-white dark:bg-gray-900 sm:px-5 sm:py-2">
-                    Or
-                  </span>
-                </div>
-              </div>
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="space-y-5">
                   <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <div className="sm:col-span-1">
@@ -55,8 +107,10 @@ export default function SignUp() {
                       </Label>
                       <Input
                         type="text"
-                        id="fname"
-                        name="fname"
+                        id="nombre"
+                        name="nombre"
+                        value={formData.nombre}
+                        onChange={handleInputChange}
                         placeholder="Ingresa tu nombre"
                       />
                     </div>
@@ -66,8 +120,10 @@ export default function SignUp() {
                       </Label>
                       <Input
                         type="text"
-                        id="lname"
-                        name="lname"
+                        id="apellido"
+                        name="apellido"
+                        value={formData.apellido}
+                        onChange={handleInputChange}
                         placeholder="Ingresa tu apellido"
                       />
                     </div>
@@ -80,7 +136,22 @@ export default function SignUp() {
                       type="email"
                       id="email"
                       name="email"
-                      placeholder="Enter your email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="Ingresa tu email"
+                    />
+                  </div>
+                  <div>
+                    <Label>
+                      Usuario<span className="text-error-500">*</span>
+                    </Label>
+                    <Input
+                      type="text"
+                      id="usuario"
+                      name="usuario"
+                      value={formData.usuario}
+                      onChange={handleInputChange}
+                      placeholder="Ingresa tu usuario"
                     />
                   </div>
                   <div>
@@ -89,8 +160,12 @@ export default function SignUp() {
                     </Label>
                     <div className="relative">
                       <Input
-                        placeholder="ingresa tu password"
+                        placeholder="Ingresa tu password"
                         type={showPassword ? "text" : "password"}
+                        id="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleInputChange}
                       />
                       <span
                         onClick={() => setShowPassword(!showPassword)}
@@ -113,21 +188,30 @@ export default function SignUp() {
                     <p className="inline-block font-normal text-gray-500 dark:text-gray-400">
                       Estoy de acuerdo con los{" "}
                       <span className="text-brand-500 hover:text-brand-600 dark:text-brand-400">
-                        terminos y condiciones
+                        términos y condiciones
                       </span>
                       <span className="text-error-500">*</span>
                     </p>
                   </div>
+                  {error && (
+                    <div className="text-center text-red-500 text-sm mt-3">
+                      {error}
+                    </div>
+                  )}
                   <div>
-                    <button className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
-                      Registrarse
+                    <button
+                      type="submit"
+                      className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
+                      disabled={loading}
+                    >
+                      {loading ? "Registrando..." : "Registrarse"}
                     </button>
                   </div>
                 </div>
               </form>
               <div className="mt-5">
                 <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-                  Ya tenes una cuenta ?{" "}
+                  Ya tienes una cuenta ?{" "}
                   <Link
                     to="/signin"
                     className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
