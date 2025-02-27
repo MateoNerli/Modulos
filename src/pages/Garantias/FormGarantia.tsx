@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import PageMeta from "../../components/common/PageMeta";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import InputText from "../../components/form/InputText";
 import SelectInput from "../../components/form/SelectInput";
 import InputNumber from "../../components/form/InputNumber";
+import axiosInterceptor from "../../hooks/axiosInterceptor";
+import { toast } from "react-toastify";
 
 function FormGarantia() {
   const [formData, setFormData] = useState({
@@ -27,22 +28,22 @@ function FormGarantia() {
   const isEditMode = Boolean(id);
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/cuenta`)
+    axiosInterceptor
+      .get(`/api/cuenta`)
       .then((response) => {
         setSocios(response.data);
       })
       .catch((error) => console.error("Error al obtener socios:", error));
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/acreedor`)
+    axiosInterceptor
+      .get(`/api/acreedor`)
       .then((response) => {
         setAcreedores(response.data);
       })
       .catch((error) => console.error("Error al obtener acreedores:", error));
 
     if (isEditMode) {
-      axios
-        .get(`${import.meta.env.VITE_API_URL}/api/garantia/${id}`)
+      axiosInterceptor
+        .get(`}/api/garantia/${id}`)
         .then((response) => {
           const data = response.data;
           data.fechaDeCarga = new Date(data.fechaDeCarga)
@@ -65,23 +66,16 @@ function FormGarantia() {
     };
 
     const apiCall = isEditMode
-      ? axios.put(
-          `${import.meta.env.VITE_API_URL}/api/garantia/${id}`,
-          formDataToSend
-        ) // Editar
-      : axios.post(
-          `${import.meta.env.VITE_API_URL}/api/garantia`,
-          formDataToSend
-        ); // Crear
+      ? axiosInterceptor.put(`/api/garantia/${id}`, formDataToSend) // Editar
+      : axiosInterceptor.post(`/api/garantia`, formDataToSend); // Crear
 
     apiCall
       .then((response) => {
-        alert(
+        toast.success(
           isEditMode
             ? "Garantía editada con éxito"
             : "Garantía creada con éxito"
         );
-        console.log("Garantía procesada con éxito:", response.data);
         navigate("/garantias"); // Redirigir a la lista de garantías
       })
       .catch((error) => console.error("Error al procesar garantía:", error));

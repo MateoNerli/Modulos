@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import PageMeta from "../../components/common/PageMeta";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import SelectInput from "../../components/form/SelectInput";
 import InputText from "../../components/form/InputText";
+import axiosInterceptor from "../../hooks/axiosInterceptor";
+import { toast } from "react-toastify";
 
 function FormCuenta() {
   const { id } = useParams(); // Obtener el id de la ruta
@@ -21,8 +22,8 @@ function FormCuenta() {
 
   useEffect(() => {
     if (id) {
-      axios
-        .get(`${import.meta.env.VITE_API_URL}/api/cuenta/${id}`)
+      axiosInterceptor
+        .get(`/api/cuenta/${id}`)
         .then((response) => {
           console.log("Datos obtenidos de la API:", response.data);
           setFormData(response.data); // Cargar datos para edición
@@ -40,46 +41,21 @@ function FormCuenta() {
     }
   }, [id, navigate]);
 
-  const validateForm = () => {
-    if (!formData.nombreCuenta) {
-      alert("El nombre de la cuenta es obligatorio.");
-      return false;
-    }
-    if (!formData.tipoDeDocuemnto) {
-      alert("El tipo de documento es obligatorio.");
-      return false;
-    }
-    if (!formData.numeroDeDocumento) {
-      alert("El número de documento es obligatorio.");
-      return false;
-    }
-    if (!formData.personeria) {
-      alert("La personería es obligatoria.");
-      return false;
-    }
-    if (!formData.rolCuenta) {
-      alert("El rol de cuenta es obligatorio.");
-      return false;
-    }
-    return true;
-  };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validateForm()) return;
 
-    const url = id
-      ? `${import.meta.env.VITE_API_URL}/api/cuenta/${id}`
-      : `${import.meta.env.VITE_API_URL}/api/cuenta`;
+    const url = id ? `/api/cuenta/${id}` : `/api/cuenta`;
     const method = id ? "put" : "post";
 
-    axios({
+    axiosInterceptor({
       method: method,
       url: url,
       data: formData,
     })
       .then(() => {
-        alert(id ? "Cuenta actualizada con éxito" : "Cuenta creada con éxito");
+        toast.success(
+          id ? "Cuenta actualizada con éxito" : "Cuenta creada con éxito"
+        );
         navigate("/cuenta");
       })
       .catch((error) => console.error("Error al guardar cuenta:", error));

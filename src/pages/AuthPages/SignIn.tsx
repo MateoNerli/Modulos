@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom"; // Corrección aquí
 import Input from "../../components/form/Input";
 import Label from "../../components/form/Label";
-import { Link } from "react-router";
 import Checkbox from "../../components/form/Checkbox";
 import Button from "../../components/ui/button/Button";
 import PageMeta from "../../components/common/PageMeta";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,13 +16,13 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Reset error message
-    setLoading(true); // Set loading to true during the request
+    setError("");
+    setLoading(true);
 
-    // Simple client-side validation
     if (!email || !password) {
       setError("Por favor, completa todos los campos.");
       setLoading(false);
@@ -34,16 +35,20 @@ export default function SignIn() {
         { email, password }
       );
 
-      // Save the JWT token in localStorage or cookies
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
-        // Redirect or handle successful login
-        window.location.href = "/dashboard";
+        toast.success("Ingreso exitoso!", {
+          autoClose: 3000,
+        });
+
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 3000);
       }
     } catch (err) {
       setError("Credenciales incorrectas o problema en el servidor.");
     } finally {
-      setLoading(false); // Set loading back to false after the request
+      setLoading(false);
     }
   };
 
@@ -66,7 +71,7 @@ export default function SignIn() {
                 <div className="space-y-6">
                   <div>
                     <Label>
-                      Email <span className="text-error-500">*</span>{" "}
+                      Email <span className="text-error-500">*</span>
                     </Label>
                     <Input
                       type="email"
@@ -77,7 +82,7 @@ export default function SignIn() {
                   </div>
                   <div>
                     <Label>
-                      Password <span className="text-error-500">*</span>{" "}
+                      Password <span className="text-error-500">*</span>
                     </Label>
                     <div className="relative">
                       <Input
@@ -133,7 +138,7 @@ export default function SignIn() {
 
               <div className="mt-5">
                 <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-                  No tenes cuenta? {""}
+                  No tenes cuenta?{" "}
                   <Link
                     to="/signup"
                     className="text-brand-500 hover:text-brand-600 dark:text-brand-400"

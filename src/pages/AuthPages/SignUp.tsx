@@ -6,6 +6,7 @@ import Label from "../../components/form/Label";
 import Checkbox from "../../components/form/Checkbox";
 import PageMeta from "../../components/common/PageMeta";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,6 +31,8 @@ export default function SignUp() {
   // Handler for form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); // Limpiar errores previos
+
     if (!isChecked) {
       setError("Debes aceptar los términos y condiciones.");
       return;
@@ -48,10 +51,9 @@ export default function SignUp() {
 
     try {
       setLoading(true);
-      setError("");
 
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/Auth/register`, // Assuming the register endpoint
+        `${import.meta.env.VITE_API_URL}/api/Auth/register`,
         {
           nombre: formData.nombre,
           apellido: formData.apellido,
@@ -62,14 +64,30 @@ export default function SignUp() {
       );
 
       if (response.status === 200) {
-        window.alert("Registro exitoso.");
-        navigate("/signin");
+        toast.success("Registro exitoso!", {
+          autoClose: 3000,
+        });
+
+        setTimeout(() => {
+          navigate("/signin");
+        }, 3000);
       } else {
-        window.alert(response.data.message);
-        setError("Error en el registro, intenta de nuevo.");
+        setError(
+          response.data.message || "Error en el registro, intenta de nuevo."
+        );
       }
-    } catch (error) {
-      setError("Hubo un error en el registro. Intenta nuevamente.");
+    } catch (error: any) {
+      console.error("Error en el registro:", error);
+      if (error.response) {
+        setError(
+          error.response.data.message ||
+            "Hubo un error en el registro. Intenta nuevamente."
+        );
+      } else if (error.request) {
+        setError("No se pudo conectar con el servidor. Verifica tu conexión.");
+      } else {
+        setError("Ocurrió un error inesperado.");
+      }
     } finally {
       setLoading(false);
     }

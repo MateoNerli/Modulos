@@ -1,14 +1,13 @@
 import { Navigate, Outlet } from "react-router-dom";
 
 const PrivateRoute = () => {
-  // logica para verificar si el usuario está autenticado
-  const isAuthenticated = false;
+  const isAuthenticated = !!localStorage.getItem("token");
 
-  //   if (!isAuthenticated) {
-  //     return <Navigate to="/signin" />; // Redirige al login si no está autenticado
-  //   }
+  if (!isAuthenticated) {
+    return <Navigate to="/signin" />;
+  }
 
-  return <Outlet />; // Si está autenticado, muestra las rutas hijas
+  return <Outlet />;
 };
 
 export default PrivateRoute;

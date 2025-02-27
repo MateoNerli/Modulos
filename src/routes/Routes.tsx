@@ -12,8 +12,8 @@ import FormGarantia from "../pages/Garantias/FormGarantia";
 import UserProfiles from "../pages/UserPages/UserProfiles";
 import Cuenta from "../pages/Cuentas/Cuenta";
 import Acreedor from "../pages/Acreedor/Acreedor";
-import CrearAcreedor from "../pages/Acreedor/CrearAcreedor";
 import FormCuenta from "../pages/Cuentas/FormCuenta";
+import FormAcreedor from "../pages/Acreedor/FormAcreedor";
 
 export default function RoutesApp() {
   return (
@@ -30,7 +30,8 @@ export default function RoutesApp() {
           <Route path="/cuenta/crear" element={<FormCuenta />} />
           <Route path="/cuenta/editar/:id" element={<FormCuenta />} />
           <Route path="/acreedor" element={<Acreedor />} />
-          <Route path="/acreedor/crear" element={<CrearAcreedor />} />
+          <Route path="/acreedor/crear" element={<FormAcreedor />} />
+          <Route path="/acreedor/editar/:id" element={<FormAcreedor />} />
         </Route>
       </Route>
 
