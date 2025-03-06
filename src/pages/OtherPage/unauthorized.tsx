@@ -1,20 +1,25 @@
 import { Link } from "react-router";
 import PageMeta from "../../components/common/PageMeta";
 
-export default function NotFound() {
+export default function Unauthorized() {
   return (
     <>
-      <PageMeta title="404" />
+      <PageMeta title="401" />
       <div className="relative flex flex-col items-center justify-center min-h-screen p-6 overflow-hidden z-1">
         <div className="mx-auto w-full max-w-[242px] text-center sm:max-w-[472px]">
           <h1 className="mb-8 font-bold text-gray-800 text-title-md dark:text-white/90 xl:text-title-2xl">
-            ERROR
+            Unauthorized
           </h1>
 
-          <img src="/images/error/404.svg" alt="404" className="" />
+          <img src="/images/error/404.svg" alt="404" className="dark:hidden" />
+          <img
+            src="/images/error/401.png"
+            alt="401"
+            className="hidden dark:block"
+          />
 
           <p className="mt-10 mb-6 text-base text-gray-700 dark:text-gray-400 sm:text-lg">
-            No se encontró la página que estás buscando.
+            No tienes permiso para acceder a esta página.
           </p>
 
           <Link
