@@ -103,7 +103,7 @@ function FormAcreedor() {
       <PageBreadcrumb
         pageTitle={isEditing ? "Editar Acreedor" : "Crear Acreedor"}
         paths={[
-          { name: "Inicio", path: "/dashboard" },
+          { name: "Inicio", path: "/" },
           { name: "Acreedores", path: "/acreedor" },
           {
             name: isEditing ? "Editar Acreedor" : "Crear Acreedor",

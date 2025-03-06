@@ -21,7 +21,7 @@ export default function RoutesApp() {
       {/* Rutas protegidas */}
       <Route element={<PrivateRoute />}>
         <Route element={<AppLayout />}>
-          <Route index path="/dashboard" element={<Dashboard />} />
+          <Route index path="/" element={<Dashboard />} />
           <Route path="/profile" element={<UserProfiles />} />
           <Route path="/garantias" element={<Garantias />} />
           <Route path="/garantias/crear" element={<FormGarantia />} />

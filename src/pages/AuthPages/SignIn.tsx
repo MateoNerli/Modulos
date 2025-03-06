@@ -42,7 +42,7 @@ export default function SignIn() {
         });
 
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate("/");
         }, 3000);
       }
     } catch (err) {
