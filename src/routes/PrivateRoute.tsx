@@ -7,8 +7,6 @@ interface PrivateRouteProps {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ allowedRoles }) => {
   const { user } = useAuth();
-  console.log(user);
-  console.log(allowedRoles);
 
   if (!user) {
     return <Navigate to="/signin" replace />;

@@ -28,11 +28,15 @@ export default function SignIn() {
       setLoading(false);
       return;
     }
-
+    const userData = {
+      username: email,
+      email,
+      password,
+    };
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/auth/login`,
-        { email, password }
+        userData
       );
 
       if (response.data.token) {
@@ -71,10 +75,10 @@ export default function SignIn() {
                 <div className="space-y-6">
                   <div>
                     <Label>
-                      Email <span className="text-error-500">*</span>
+                      Email | Username<span className="text-error-500">*</span>
                     </Label>
                     <Input
-                      type="email"
+                      type="text"
                       placeholder="info@gmail.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}

@@ -1,25 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
 import Input from "../form/Input";
 import Label from "../form/Label";
 import { FaEdit } from "react-icons/fa";
+import axiosInterceptor from "../../hooks/axiosInterceptor";
+import { toast } from "react-toastify";
 
-export default function UserInfoCard() {
+export default function UserInfoCard(cuenta: any) {
   const { isOpen, openModal, closeModal } = useModal();
+
+  console.log(cuenta);
 
   // Estado para manejar la información del usuario
   const [userInfo, setUserInfo] = useState({
-    Nombre: "Mateo",
-    Apellido: "Nerli",
-    Email: "mnerli2003@gmail.com",
-    Celular: "+54 3364512460",
-    Bio: "Desarrollador",
+    nombre: cuenta?.cuenta?.nombre,
+    apellido: cuenta?.cuenta?.apellido,
+    email: cuenta?.cuenta?.email,
+    celular: cuenta?.cuenta?.celular,
+    biografia: cuenta?.cuenta?.biografia,
   });
+
+  useEffect(() => {
+    setUserInfo({
+      nombre: cuenta?.cuenta?.nombre,
+      apellido: cuenta?.cuenta?.apellido,
+      email: cuenta?.cuenta?.email,
+      celular: cuenta?.cuenta?.celular,
+      biografia: cuenta?.cuenta?.biografia,
+    });
+  }, [cuenta]);
 
   // Estado temporal para edición
   const [editUserInfo, setEditUserInfo] = useState({ ...userInfo });
+
+  useEffect(() => {
+    setEditUserInfo({ ...userInfo });
+  }, [userInfo]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditUserInfo({
@@ -27,11 +45,31 @@ export default function UserInfoCard() {
       [e.target.name]: e.target.value,
     });
   };
+  const handleSave = async () => {
+    try {
+      const updatedUserInfo = {
+        ...cuenta?.cuenta,
+        ...editUserInfo,
+      };
 
-  const handleSave = () => {
-    setUserInfo(editUserInfo); // Guardar cambios en el estado principal
-    console.log("Datos actualizados:", editUserInfo); // Simulación de API call
-    closeModal();
+      const payload = {
+        ...updatedUserInfo,
+        IdUsuario: cuenta?.cuenta?.idUsuario,
+      };
+      const response = await axiosInterceptor.post(`/api/Usuario`, payload);
+
+      console.log("Response from backend:", response.data); // Verificar la respuesta
+
+      if (response.status === 200) {
+        setUserInfo(response.data); // Actualiza el estado con los datos devueltos por el backend
+        toast.success("Información actualizada correctamente");
+        closeModal();
+      } else {
+        toast.error("Error al actualizar la información");
+      }
+    } catch (error) {
+      toast.error("Error al actualizar la información: " + error);
+    }
   };
 
   return (

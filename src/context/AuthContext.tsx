@@ -29,6 +29,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -36,16 +37,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         const decoded: any = jwtDecode(token);
         setUser({
-          name: decoded.username, // Usamos "username" porque "name" no está en el token
+          name: decoded.username,
           role: decoded[
             "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-          ], // Extraer correctamente el role
+          ],
         });
       } catch (error) {
         console.error("Token inválido", error);
         setUser(null);
       }
+    } else {
+      setUser(null);
     }
+    setLoading(false); // Mark loading as false after checking the token
   }, []);
 
   const login = (token: string) => {
@@ -63,6 +67,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem("token");
     setUser(null);
   };
+
+  if (loading) {
+    // Puedes mostrar un spinner o un mensaje mientras cargas el usuario
+    return <div>Loading...</div>;
+  }
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>

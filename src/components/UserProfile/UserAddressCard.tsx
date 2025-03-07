@@ -1,27 +1,65 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
 import Input from "../form/Input";
 import Label from "../form/Label";
 import { FaEdit } from "react-icons/fa";
+import axiosInterceptor from "../../hooks/axiosInterceptor";
+import { toast } from "react-toastify";
 
-export default function UserAddressCard() {
+export default function UserAddressCard(cuenta: any) {
   const { isOpen, openModal, closeModal } = useModal();
-  const [direccion] = useState({
-    pais: "Aregntina",
-    ciudadEstado: "San Nicolas",
-    codigoPostal: "2900",
-    direccion: "Cernadas 363",
+  const [direccion, setDireccion] = useState({
+    pais: cuenta?.cuenta.pais,
+    ciudad: cuenta?.cuenta.ciudad,
+    codigoPostal: cuenta?.cuenta.codigoPostal,
+    direccion: cuenta?.cuenta.direccion,
   });
 
-  const handleChange = () => {
-    console.log("Cambiando dirección...");
+  useEffect(() => {
+    setDireccion({
+      pais: cuenta?.cuenta.pais,
+      ciudad: cuenta?.cuenta.ciudad,
+      codigoPostal: cuenta?.cuenta.codigoPostal,
+      direccion: cuenta?.cuenta.direccion,
+    });
+  }, [cuenta]);
+
+  const [editUserInfo, setEditUserInfo] = useState({ ...direccion });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditUserInfo({
+      ...editUserInfo,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSave = () => {
-    console.log("Guardando cambios...", direccion);
-    closeModal();
+  const handleSave = async () => {
+    try {
+      const updatedUserInfo = {
+        ...cuenta?.cuenta,
+        ...editUserInfo,
+      };
+
+      const payload = {
+        ...updatedUserInfo,
+        IdUsuario: cuenta?.cuenta?.idUsuario,
+      };
+      const response = await axiosInterceptor.post(`/api/Usuario`, payload);
+
+      console.log("Response from backend:", response.data); // Verificar la respuesta
+
+      if (response.status === 200) {
+        setDireccion(response.data); // Actualiza el estado con los datos devueltos por el backend
+        toast.success("Información actualizada correctamente");
+        closeModal();
+      } else {
+        toast.error("Error al actualizar la información");
+      }
+    } catch (error) {
+      toast.error("Error al actualizar la información" + error);
+    }
   };
 
   return (
