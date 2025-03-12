@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Corrección aquí
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/form/Input";
 import Label from "../../components/form/Label";
 import Checkbox from "../../components/form/Checkbox";
 import Button from "../../components/ui/button/Button";
 import PageMeta from "../../components/common/PageMeta";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import axios from "axios";
 import { toast } from "react-toastify";
+import axiosInterceptor from "../../hooks/axiosInterceptor";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,7 +18,7 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -34,23 +34,21 @@ export default function SignIn() {
       password,
     };
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/auth/login`,
-        userData
-      );
+      const response = await axiosInterceptor.post(`/api/auth/login`, userData);
 
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
         toast.success("Ingreso exitoso!", {
-          autoClose: 3000,
+          autoClose: 2000,
         });
 
         setTimeout(() => {
           navigate("/");
-        }, 3000);
+        }, 2000);
       }
-    } catch (err) {
-      setError("Credenciales incorrectas o problema en el servidor.");
+    } catch (ex) {
+      setError("Problema en el servidor.");
+      console.error(ex);
     } finally {
       setLoading(false);
     }

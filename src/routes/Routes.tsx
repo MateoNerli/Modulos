@@ -16,6 +16,7 @@ import FormCuenta from "../pages/Cuentas/FormCuenta";
 import FormAcreedor from "../pages/Acreedor/FormAcreedor";
 import { AuthProvider } from "../context/AuthContext";
 import Unauthorized from "../pages/OtherPage/unauthorized";
+import Error500 from "../pages/OtherPage/error500";
 
 export default function RoutesApp() {
   return (
@@ -47,6 +48,7 @@ export default function RoutesApp() {
         {/* Ruta de fallback */}
         <Route path="*" element={<NotFound />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/error500" element={<Error500 />} />
       </Routes>
     </AuthProvider>
   );

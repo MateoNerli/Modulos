@@ -7,6 +7,8 @@ import {
 } from "react";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../types/AuthTypes";
+import Loading from "../components/ui/loading/loading";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   user: User | null;
@@ -30,6 +32,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -49,7 +52,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } else {
       setUser(null);
     }
-    setLoading(false); // Mark loading as false after checking the token
+    setLoading(false);
   }, []);
 
   const login = (token: string) => {
@@ -61,6 +64,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
       ],
     });
+    navigate("/");
   };
 
   const logout = () => {
@@ -69,8 +73,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   if (loading) {
-    // Puedes mostrar un spinner o un mensaje mientras cargas el usuario
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

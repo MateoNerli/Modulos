@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 const axiosInterceptor = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -8,6 +8,7 @@ const axiosInterceptor = axios.create({
   },
 });
 
+// Interceptor de solicitud (Verifica token antes de enviar la petición)
 axiosInterceptor.interceptors.request.use(config => {
   const token = localStorage.getItem('token');
 
@@ -36,5 +37,26 @@ axiosInterceptor.interceptors.request.use(config => {
 }, error => {
   return Promise.reject(error);
 });
+
+// Interceptor de respuesta (Maneja errores 500 y problemas de conexión)
+axiosInterceptor.interceptors.response.use(
+  response => response,
+  error => {
+    if (!error.response) {
+      console.error('Error de conexión con el servidor:', error);
+      localStorage.removeItem('token'); // Borra el token si el servidor está caído
+      window.location.href = '/error500'; // Redirige a la página de error
+      return Promise.reject(new Error('Servidor no disponible, redirigiendo a error500.'));
+    }
+
+    if (error.response.status === 500) {
+      console.error('Error 500: Problema en el servidor');
+      localStorage.removeItem('token');
+      window.location.href = '/error500';
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default axiosInterceptor;
