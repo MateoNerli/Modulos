@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import PageMeta from "../../components/common/PageMeta";
@@ -9,8 +8,17 @@ import { Link } from "react-router-dom";
 import axiosInterceptor from "../../hooks/axiosInterceptor";
 import { toast } from "react-toastify";
 
+interface Garantia {
+  idGarantia: number;
+  tipoGarantia: string;
+  productoComercial: string;
+  divisa: string;
+  fechaDeCarga: string;
+  montoBruto: number;
+}
+
 export default function Garantias() {
-  const [garantia, setGarantia] = useState<any[]>([]);
+  const [garantia, setGarantia] = useState<Garantia[]>([]);
 
   useEffect(() => {
     fetchData();
@@ -33,7 +41,8 @@ export default function Garantias() {
       // Fetch data again
       fetchData();
     } catch (error) {
-      console.error("Error al eliminar garantai:", error);
+      console.error("Error al eliminar garantia:", error);
+      toast.error("Error al eliminar la garantia");
     }
   };
 
@@ -41,28 +50,28 @@ export default function Garantias() {
     {
       key: "Tipo de garantia",
       label: "Tipo de garantia",
-      render: (row: any) => (
+      render: (row: Garantia) => (
         <span className="dark:text-gray-200">{row.tipoGarantia}</span>
       ),
     },
     {
       key: "Producto Comercial",
       label: "Producto Comercial",
-      render: (row: any) => (
+      render: (row: Garantia) => (
         <span className="dark:text-gray-200">{row.productoComercial}</span>
       ),
     },
     {
       key: "Divisa",
       label: "Divisa",
-      render: (row: any) => (
+      render: (row: Garantia) => (
         <span className="dark:text-gray-200">{row.divisa}</span>
       ),
     },
     {
       key: "Fecha de Carga",
       label: "Fecha de Carga",
-      render: (row: any) => (
+      render: (row: Garantia) => (
         <span className="dark:text-gray-200">
           {new Date(row.fechaDeCarga).toLocaleDateString()}
         </span>
@@ -71,14 +80,14 @@ export default function Garantias() {
     {
       key: "Monto Bruto",
       label: "Monto Bruto",
-      render: (row: any) => (
+      render: (row: Garantia) => (
         <span className="dark:text-gray-200">{row.montoBruto}</span>
       ),
     },
     {
       key: "Acciones",
       label: "Acciones",
-      render: (row: any) => (
+      render: (row: Garantia) => (
         <div className="flex gap-3">
           <Link to={`/garantias/editar/${row.idGarantia}`}>
             <button className="flex items-center justify-center p-2 rounded-full bg-yellow-300 hover:bg-gray-200">
@@ -112,7 +121,13 @@ export default function Garantias() {
             <Button>Crear Garantia</Button>
           </Link>
         </div>
-        <DataTable columns={columns} data={garantia} defaultItemsPerPage={30} />
+        <div className="bg-white dark:bg-gray-800 shadow-md rounded-md">
+          <DataTable
+            columns={columns}
+            data={garantia}
+            defaultItemsPerPage={30}
+          />
+        </div>
       </div>
     </>
   );

@@ -88,7 +88,7 @@ export default function SignIn() {
                     <div className="relative">
                       <Input
                         type={showPassword ? "text" : "password"}
-                        placeholder="Enter your password"
+                        placeholder="Ingresa tu contraseña"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                       />

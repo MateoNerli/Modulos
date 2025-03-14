@@ -48,7 +48,7 @@ export default function RoutesApp() {
         {/* Ruta de fallback */}
         <Route path="*" element={<NotFound />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
-        <Route path="/error500" element={<Error500 />} />
+        <Route path="/internalserver" element={<Error500 />} />
       </Routes>
     </AuthProvider>
   );

@@ -6,11 +6,12 @@ import UserInfoCard from "../../components/UserProfile/UserInfoCard";
 import UserMetaCard from "../../components/UserProfile/UserMetaCard";
 import { useAuth } from "../../context/AuthContext";
 import axiosInterceptor from "../../hooks/axiosInterceptor";
+import { Cuenta } from "../../Interface/Cuenta";
 
 export default function UserProfiles() {
-  const [cuenta, setCuenta] = useState<any[]>([]);
-  const authcontex = useAuth();
-  const { user } = authcontex;
+  const [cuenta, setCuenta] = useState<Cuenta | null>(null);
+  const authContext = useAuth();
+  const { user } = authContext;
 
   useEffect(() => {
     if (user?.name) {
@@ -29,6 +30,7 @@ export default function UserProfiles() {
       console.error("Error fetching data:", error);
     }
   };
+
   return (
     <>
       <PageMeta title="Perfil" />
@@ -41,9 +43,13 @@ export default function UserProfiles() {
       />
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
         <div className="space-y-6">
-          <UserMetaCard cuenta={cuenta} />
-          <UserInfoCard cuenta={cuenta} />
-          <UserAddressCard cuenta={cuenta} />
+          {cuenta && (
+            <>
+              <UserMetaCard cuenta={cuenta} />
+              <UserInfoCard cuenta={cuenta} />
+              <UserAddressCard cuenta={cuenta} />
+            </>
+          )}
         </div>
       </div>
     </>

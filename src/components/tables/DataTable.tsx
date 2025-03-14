@@ -8,25 +8,25 @@ import {
 } from "../ui/table";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
-interface Column {
+interface Column<T> {
   key: string;
   label: string;
-  render?: (row: string) => React.ReactNode;
+  render?: (row: T) => React.ReactNode;
 }
 
-interface DataTableProps {
-  columns: Column[];
-  data: string[];
+interface DataTableProps<T> {
+  columns: Column<T>[];
+  data: T[];
   itemsPerPageOptions?: number[];
   defaultItemsPerPage?: number;
 }
 
-export default function DataTable({
+export default function DataTable<T>({
   columns,
   data,
   itemsPerPageOptions = [10, 30, 50, 100],
   defaultItemsPerPage = 30,
-}: DataTableProps) {
+}: DataTableProps<T>) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(defaultItemsPerPage);
 
@@ -75,7 +75,9 @@ export default function DataTable({
               <TableRow key={index}>
                 {columns.map((col) => (
                   <TableCell key={col.key} className="px-4 py-3 text-start">
-                    {col.render ? col.render(row) : row}
+                    {col.render
+                      ? col.render(row)
+                      : (row as Record<string, string>)[col.key]}
                   </TableCell>
                 ))}
               </TableRow>

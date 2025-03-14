@@ -7,8 +7,29 @@ import InputText from "../../components/form/InputText";
 import SelectInput from "../../components/form/SelectInput";
 import { useNavigate, useParams } from "react-router-dom";
 
+interface Banco {
+  idBanco: number;
+  nombre: string;
+}
+
+interface FormData {
+  nombre: string;
+  cuit: string;
+  tipoDeAcreedor: string;
+  tipoDeAcreedorCVN: string;
+  codigoEntidadesOperacionesAfrontadas: string;
+  montoCalificado: string;
+  fechaDeCalificacion: string;
+  fechaDeVencimiento: string;
+  informeBCRA: string;
+  porcentaje: string;
+  saldoGarantiasVigente: string;
+  saldoGarantiasOperativo: string;
+  idBanco: number;
+}
+
 function FormAcreedor() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     nombre: "",
     cuit: "",
     tipoDeAcreedor: "",
@@ -24,13 +45,12 @@ function FormAcreedor() {
     idBanco: 0,
   });
 
-  const [bancos, setBancos] = useState<any[]>([]);
-  const [isEditing, setIsEditing] = useState(false); // Para saber si estamos editando un acreedor
-  const { id } = useParams(); // Para obtener el ID del acreedor si estamos editando
+  const [bancos, setBancos] = useState<Banco[]>([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Obtener bancos
     axiosInterceptor
       .get(`/api/banco`)
       .then((response) => {
@@ -39,9 +59,7 @@ function FormAcreedor() {
       .catch((error) => console.error("Error al obtener bancos:", error));
 
     if (id) {
-      // Si hay un ID en la URL, significa que estamos editando un acreedor
       setIsEditing(true);
-      // Cargar los datos del acreedor
       axiosInterceptor
         .get(`/api/acreedor/${id}`)
         .then((response) => {
@@ -52,7 +70,7 @@ function FormAcreedor() {
           data.fechaDeVencimiento = new Date(data.fechaDeVencimiento)
             .toISOString()
             .split("T")[0];
-          setFormData(data); // Cargar los datos en el formulario
+          setFormData(data);
         })
         .catch((error) => {
           console.error("Error al obtener el acreedor:", error);
@@ -63,19 +81,16 @@ function FormAcreedor() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Convertir fechaDeCarga a UTC antes de enviar
     const formDataToSend = {
       ...formData,
       fechaDeCalificacion: new Date(formData.fechaDeCalificacion).toISOString(),
       fechaDeVencimiento: new Date(formData.fechaDeVencimiento).toISOString(),
     };
 
-    // Determinar si es una creación o una actualización
     const apiCall = isEditing
-      ? axiosInterceptor.put(`/api/acreedor/${id}`, formDataToSend) // Usamos PUT para editar
-      : axiosInterceptor.post(`/api/acreedor`, formDataToSend); // Usamos POST para crear
+      ? axiosInterceptor.put(`/api/acreedor/${id}`, formDataToSend)
+      : axiosInterceptor.post(`/api/acreedor`, formDataToSend);
 
-    // Enviar los datos del formulario
     apiCall
       .then(() => {
         toast.success(
@@ -127,7 +142,6 @@ function FormAcreedor() {
                 Datos Generales
               </h2>
               <div className="grid md:grid-cols-2 gap-4">
-                {/* Campo Nombre */}
                 <InputText
                   name="nombre"
                   label="Nombre"

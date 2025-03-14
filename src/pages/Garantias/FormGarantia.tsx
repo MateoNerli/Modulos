@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PageMeta from "../../components/common/PageMeta";
@@ -9,8 +8,28 @@ import InputNumber from "../../components/form/InputNumber";
 import axiosInterceptor from "../../hooks/axiosInterceptor";
 import { toast } from "react-toastify";
 
+interface Socio {
+  idCuenta: number;
+  nombreCuenta: string;
+}
+
+interface Acreedor {
+  idAcreedor: number;
+  nombre: string;
+}
+
+interface FormData {
+  idCuenta: number;
+  tipoGarantia: string;
+  productoComercial: string;
+  fechaDeCarga: string;
+  montoBruto: string;
+  idAcreedor: number;
+  divisa: string;
+}
+
 function FormGarantia() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     idCuenta: 0,
     tipoGarantia: "",
     productoComercial: "",
@@ -20,8 +39,8 @@ function FormGarantia() {
     divisa: "",
   });
 
-  const [socios, setSocios] = useState<any[]>([]);
-  const [acreedores, setAcreedores] = useState<any[]>([]);
+  const [socios, setSocios] = useState<Socio[]>([]);
+  const [acreedores, setAcreedores] = useState<Acreedor[]>([]);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -43,7 +62,7 @@ function FormGarantia() {
 
     if (isEditMode) {
       axiosInterceptor
-        .get(`}/api/garantia/${id}`)
+        .get(`/api/garantia/${id}`)
         .then((response) => {
           const data = response.data;
           data.fechaDeCarga = new Date(data.fechaDeCarga)
@@ -59,15 +78,14 @@ function FormGarantia() {
     e.preventDefault();
     console.log("Form data:", formData);
 
-    // Convertir fechaDeCarga a UTC antes de enviar
     const formDataToSend = {
       ...formData,
       fechaDeCarga: new Date(formData.fechaDeCarga).toISOString(),
     };
 
     const apiCall = isEditMode
-      ? axiosInterceptor.put(`/api/garantia/${id}`, formDataToSend) // Editar
-      : axiosInterceptor.post(`/api/garantia`, formDataToSend); // Crear
+      ? axiosInterceptor.put(`/api/garantia/${id}`, formDataToSend)
+      : axiosInterceptor.post(`/api/garantia`, formDataToSend);
 
     apiCall
       .then(() => {
@@ -76,7 +94,7 @@ function FormGarantia() {
             ? "Garantía editada con éxito"
             : "Garantía creada con éxito"
         );
-        navigate("/garantias"); // Redirigir a la lista de garantías
+        navigate("/garantias");
       })
       .catch((error) => console.error("Error al procesar garantía:", error));
   };

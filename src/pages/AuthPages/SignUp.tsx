@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Input from "../../components/form/Input";
@@ -8,10 +8,18 @@ import PageMeta from "../../components/common/PageMeta";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 
+interface FormData {
+  nombre: string;
+  apellido: string;
+  email: string;
+  usuario: string;
+  password: string;
+}
+
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     nombre: "",
     apellido: "",
     email: "",
@@ -22,16 +30,14 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Handler for input change
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // Handler for form submission
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(""); // Limpiar errores previos
+    setError("");
 
     if (!isChecked) {
       setError("Debes aceptar los términos y condiciones.");
@@ -76,15 +82,20 @@ export default function SignUp() {
           response.data.message || "Error en el registro, intenta de nuevo."
         );
       }
-    } catch (error: any) {
-      console.error("Error en el registro:", error);
-      if (error.response) {
-        setError(
-          error.response.data.message ||
-            "Hubo un error en el registro. Intenta nuevamente."
-        );
-      } else if (error.request) {
-        setError("No se pudo conectar con el servidor. Verifica tu conexión.");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          setError(
+            error.response.data.message ||
+              "Hubo un error en el registro. Intenta nuevamente."
+          );
+        } else if (error.request) {
+          setError(
+            "No se pudo conectar con el servidor. Verifica tu conexión."
+          );
+        } else {
+          setError("Ocurrió un error inesperado.");
+        }
       } else {
         setError("Ocurrió un error inesperado.");
       }
@@ -201,7 +212,7 @@ export default function SignUp() {
                     <Checkbox
                       className="w-5 h-5"
                       checked={isChecked}
-                      onChange={setIsChecked}
+                      onChange={() => setIsChecked(!isChecked)}
                     />
                     <p className="inline-block font-normal text-gray-500 dark:text-gray-400">
                       Estoy de acuerdo con los{" "}

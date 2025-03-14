@@ -1,13 +1,14 @@
 export interface Cuenta {
-  idUsuario: number;
-  username: string;
-  biografia: string;
-  email: string;
+  idUsuario: string;
   nombre: string;
   apellido: string;
-  celular: string;
+  email: string;
+  telefono: string;
   direccion: string;
   ciudad: string;
   pais: string;
   codigoPostal: string;
+  username: string;
+  biografia: string;
+  celular: string;
 }

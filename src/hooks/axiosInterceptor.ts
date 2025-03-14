@@ -42,14 +42,14 @@ axiosInterceptor.interceptors.response.use(
     if (!error.response) {
       console.error('Error de conexión con el servidor:', error);
       localStorage.removeItem('token'); 
-      window.location.href = '/error500'; 
+      window.location.href = '/internalserver'; 
       return Promise.reject(new Error('Servidor no disponible, redirigiendo a error500.'));
     }
 
     if (error.response.status === 500) {
       console.error('Error 500: Problema en el servidor');
       localStorage.removeItem('token');
-      window.location.href = '/error500';
+      window.location.href = '/internalserver';
     }
 
     return Promise.reject(error);

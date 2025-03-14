@@ -8,11 +8,24 @@ import { Link } from "react-router-dom";
 import axiosInterceptor from "../../hooks/axiosInterceptor";
 import { toast } from "react-toastify";
 
+interface Acreedor {
+  idAcreedor: number;
+  nombre: string;
+  cuit: string;
+  tipoDeAcreedor: string;
+  codigoEntidadesOperacionesAfrontadas: string;
+  montoCalificado: number;
+  fechaDeCalificacion: string;
+  porcentaje: number;
+}
+
 export default function Acreedor() {
-  const [acreedor, setAcreedor] = useState<any[]>([]);
+  const [acreedor, setAcreedor] = useState<Acreedor[]>([]);
+
   useEffect(() => {
     fetchData();
   }, []);
+
   const fetchData = async () => {
     try {
       const response = await axiosInterceptor.get("/api/acreedor");
@@ -44,28 +57,28 @@ export default function Acreedor() {
     {
       key: "Nombre",
       label: "Nombre",
-      render: (row: any) => (
+      render: (row: Acreedor) => (
         <span className="dark:text-gray-200">{row.nombre}</span>
       ),
     },
     {
       key: "CUIT",
       label: "CUIT",
-      render: (row: any) => (
+      render: (row: Acreedor) => (
         <span className="dark:text-gray-200">{row.cuit}</span>
       ),
     },
     {
       key: "Tipo de Acreedor",
       label: "Tipo de Acreedor",
-      render: (row: any) => (
+      render: (row: Acreedor) => (
         <span className="dark:text-gray-200">{row.tipoDeAcreedor}</span>
       ),
     },
     {
       key: "Codigo de Entidades Operaciones",
       label: "Código de Entidades Operaciones",
-      render: (row: any) => (
+      render: (row: Acreedor) => (
         <span className="dark:text-gray-200">
           {row.codigoEntidadesOperacionesAfrontadas}
         </span>
@@ -74,14 +87,14 @@ export default function Acreedor() {
     {
       key: "Monto Calificado",
       label: "Monto Calificado",
-      render: (row: any) => (
+      render: (row: Acreedor) => (
         <span className="dark:text-gray-200">{row.montoCalificado}</span>
       ),
     },
     {
       key: "Fecha de Calificación",
       label: "Fecha de Calificación",
-      render: (row: any) => (
+      render: (row: Acreedor) => (
         <span className="dark:text-gray-200">
           {new Date(row.fechaDeCalificacion).toLocaleDateString()}
         </span>
@@ -90,14 +103,14 @@ export default function Acreedor() {
     {
       key: "Porcentaje",
       label: "Porcentaje",
-      render: (row: any) => (
+      render: (row: Acreedor) => (
         <span className="dark:text-gray-200">{row.porcentaje}</span>
       ),
     },
     {
       key: "Acciones",
       label: "Acciones",
-      render: (row: any) => (
+      render: (row: Acreedor) => (
         <div className="flex gap-3">
           <Link to={`/acreedor/editar/${row.idAcreedor}`}>
             <button className="flex items-center justify-center p-2 rounded-full bg-yellow-300 hover:bg-gray-200">
@@ -131,7 +144,9 @@ export default function Acreedor() {
             <Button>Crear Acreedor</Button>
           </Link>
         </div>
-        <DataTable columns={columns} data={acreedor} defaultItemsPerPage={30} />
+        <div className="bg-white dark:bg-gray-800 shadow-md rounded-md">
+          <DataTable columns={columns} data={acreedor} />
+        </div>
       </div>
     </>
   );

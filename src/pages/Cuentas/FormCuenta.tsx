@@ -8,7 +8,7 @@ import axiosInterceptor from "../../hooks/axiosInterceptor";
 import { toast } from "react-toastify";
 
 function FormCuenta() {
-  const { id } = useParams(); // Obtener el id de la ruta
+  const { id } = useParams();
   const [formData, setFormData] = useState({
     nombreCuenta: "",
     tipoDeDocuemnto: "",
@@ -26,7 +26,7 @@ function FormCuenta() {
         .get(`/api/cuenta/${id}`)
         .then((response) => {
           console.log("Datos obtenidos de la API:", response.data);
-          setFormData(response.data); // Cargar datos para edición
+          setFormData(response.data);
           setLoading(false);
         })
         .catch((error) => {
@@ -34,7 +34,7 @@ function FormCuenta() {
             "Error al cargar los datos:",
             error.response || error.message
           );
-          navigate("/cuenta"); // Redirigir en caso de error
+          navigate("/cuenta");
         });
     } else {
       setLoading(false);

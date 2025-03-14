@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import PageMeta from "../../components/common/PageMeta";
@@ -9,8 +8,18 @@ import { Link } from "react-router-dom";
 import axiosInterceptor from "../../hooks/axiosInterceptor";
 import { toast } from "react-toastify";
 
+interface Cuenta {
+  idCuenta: number;
+  nombreCuenta: string;
+  tipoDeDocumento: string;
+  numeroDeDocumento: string;
+  personeria: string;
+  relacionamientoSGR: string;
+  rolCuenta: string;
+}
+
 export default function Cuenta() {
-  const [cuenta, setCuenta] = useState<any[]>([]);
+  const [cuenta, setCuenta] = useState<Cuenta[]>([]);
 
   useEffect(() => {
     fetchData();
@@ -47,49 +56,49 @@ export default function Cuenta() {
     {
       key: "Nombre de cuenta",
       label: "Nombre de cuenta",
-      render: (row: any) => (
+      render: (row: Cuenta) => (
         <span className="dark:text-gray-200">{row.nombreCuenta}</span>
       ),
     },
     {
       key: "Tipo de Documento",
       label: "Tipo de Documento",
-      render: (row: any) => (
-        <span className="dark:text-gray-200">{row.tipoDeDocuemnto}</span>
+      render: (row: Cuenta) => (
+        <span className="dark:text-gray-200">{row.tipoDeDocumento}</span>
       ),
     },
     {
       key: "Número de Documento",
       label: "Número de Documento",
-      render: (row: any) => (
+      render: (row: Cuenta) => (
         <span className="dark:text-gray-200">{row.numeroDeDocumento}</span>
       ),
     },
     {
       key: "Personería",
       label: "Personería",
-      render: (row: any) => (
+      render: (row: Cuenta) => (
         <span className="dark:text-gray-200">{row.personeria}</span>
       ),
     },
     {
       key: "Relación SGR",
       label: "Relación SGR",
-      render: (row: any) => (
+      render: (row: Cuenta) => (
         <span className="dark:text-gray-200">{row.relacionamientoSGR}</span>
       ),
     },
     {
       key: "Rol de la Cuenta",
       label: "Rol de la Cuenta",
-      render: (row: any) => (
+      render: (row: Cuenta) => (
         <span className="dark:text-gray-200">{row.rolCuenta}</span>
       ),
     },
     {
       key: "Acciones",
       label: "Acciones",
-      render: (row: any) => (
+      render: (row: Cuenta) => (
         <div className="flex gap-3">
           <Link to={`/cuenta/editar/${row.idCuenta}`}>
             <button className="flex items-center justify-center p-2 rounded-full bg-yellow-300 hover:bg-gray-200">
@@ -123,7 +132,9 @@ export default function Cuenta() {
             <Button>Crear Cuenta</Button>
           </Link>
         </div>
-        <DataTable columns={columns} data={cuenta} defaultItemsPerPage={30} />
+        <div className="bg-white dark:bg-gray-800 shadow-md rounded-md">
+          <DataTable columns={columns} data={cuenta} defaultItemsPerPage={30} />
+        </div>
       </div>
     </>
   );
