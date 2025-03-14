@@ -77,7 +77,7 @@ function FormAcreedor() {
 
     // Enviar los datos del formulario
     apiCall
-      .then((response) => {
+      .then(() => {
         toast.success(
           isEditing
             ? "Acreedor actualizado con éxito"

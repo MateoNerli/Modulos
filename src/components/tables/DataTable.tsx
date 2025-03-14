@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import {
   Table,
@@ -12,12 +11,12 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 interface Column {
   key: string;
   label: string;
-  render?: (row: any) => React.ReactNode;
+  render?: (row: string) => React.ReactNode;
 }
 
 interface DataTableProps {
   columns: Column[];
-  data: any[];
+  data: string[];
   itemsPerPageOptions?: number[];
   defaultItemsPerPage?: number;
 }
@@ -31,7 +30,6 @@ export default function DataTable({
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(defaultItemsPerPage);
 
-  // Paginación
   const totalPages = Math.ceil(data.length / itemsPerPage);
   const paginatedData = data.slice(
     (currentPage - 1) * itemsPerPage,
@@ -58,7 +56,6 @@ export default function DataTable({
           </select>
         </div>
         <Table>
-          {/* Encabezado */}
           <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
             <TableRow>
               {columns.map((col) => (
@@ -73,13 +70,12 @@ export default function DataTable({
             </TableRow>
           </TableHeader>
 
-          {/* Cuerpo */}
           <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
             {paginatedData.map((row, index) => (
               <TableRow key={index}>
                 {columns.map((col) => (
                   <TableCell key={col.key} className="px-4 py-3 text-start">
-                    {col.render ? col.render(row) : row[col.key]}
+                    {col.render ? col.render(row) : row}
                   </TableCell>
                 ))}
               </TableRow>
@@ -88,7 +84,6 @@ export default function DataTable({
         </Table>
       </div>
 
-      {/* Paginación */}
       <div className="flex justify-between items-center p-4">
         <div className="flex items-center gap-2">
           <button

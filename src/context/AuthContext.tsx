@@ -6,9 +6,18 @@ import {
   ReactNode,
 } from "react";
 import { jwtDecode } from "jwt-decode";
-import { User } from "../types/AuthTypes";
 import Loading from "../components/ui/loading/loading";
 import { useNavigate } from "react-router-dom";
+
+interface User {
+  name: string;
+  role: string;
+}
+
+interface DecodedToken {
+  username: string;
+  "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": string;
+}
 
 interface AuthContextType {
   user: User | null;
@@ -38,7 +47,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decoded: any = jwtDecode(token);
+        const decoded: DecodedToken = jwtDecode<DecodedToken>(token);
         setUser({
           name: decoded.username,
           role: decoded[
@@ -52,12 +61,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } else {
       setUser(null);
     }
+
     setLoading(false);
   }, []);
 
   const login = (token: string) => {
     localStorage.setItem("token", token);
-    const decoded: any = jwtDecode(token);
+    const decoded: DecodedToken = jwtDecode<DecodedToken>(token);
+    console.log("Token decodificado al hacer login:", decoded);
+
     setUser({
       name: decoded.username,
       role: decoded[
@@ -70,6 +82,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("token");
     setUser(null);
+    navigate("/login");
   };
 
   if (loading) {

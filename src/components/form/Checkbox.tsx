@@ -1,12 +1,12 @@
 import React from "react";
 
 interface CheckboxProps {
-  label?: string; // Optional label for the checkbox
-  checked: boolean; // Checked state
+  label?: string;
+  checked: boolean;
   className?: string;
-  id?: string; // Unique ID for the checkbox
-  onChange: (checked: boolean) => void; // Change handler
-  disabled?: boolean; // Disabled state
+  id?: string;
+  onChange: (checked: boolean) => void;
+  disabled?: boolean;
 }
 
 const Checkbox: React.FC<CheckboxProps> = ({

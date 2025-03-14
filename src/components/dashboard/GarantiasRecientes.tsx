@@ -6,15 +6,13 @@ import {
   TableRow,
 } from "../ui/table";
 
-// Define the TypeScript interface for the table rows
 interface Product {
-  id: number; // Unique identifier for each product
-  name: string; // Product name
-  category: string; // Category of the product
-  price: string; // Price of the product (as a string with currency symbol)
-  // status: string; // Status of the product
-  image: string; // URL or path to the product image
-  status: "Activo" | "Canceled"; // Status of the product
+  id: number;
+  name: string;
+  category: string;
+  price: string;
+  image: string;
+  status: "Activo" | "Cancelado";
 }
 
 const tableData: Product[] = [
@@ -32,7 +30,7 @@ const tableData: Product[] = [
     name: "Garantia 1",
     category: "Socio ",
     price: "$879.00",
-    status: "Canceled",
+    status: "Cancelado",
     image:
       "https://static.vecteezy.com/system/resources/previews/015/360/482/non_2x/money-insurance-protection-guarantees-document-bank-deposit-wealth-care-cash-investment-secure-currency-safety-warranty-policy-banking-coverage-savings-trust-concept-financial-contract-vector.jpg",
   },
@@ -50,7 +48,7 @@ const tableData: Product[] = [
     name: "Garantia 1",
     category: "Socio ",
     price: "$1699.00",
-    status: "Canceled",
+    status: "Cancelado",
     image:
       "https://static.vecteezy.com/system/resources/previews/015/360/482/non_2x/money-insurance-protection-guarantees-document-bank-deposit-wealth-care-cash-investment-secure-currency-safety-warranty-policy-banking-coverage-savings-trust-concept-financial-contract-vector.jpg",
   },

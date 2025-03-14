@@ -1,11 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { Link, useNavigate } from "react-router-dom";
 import { FaAngleDown, FaSignOutAlt, FaUserAlt } from "react-icons/fa";
+import { useAuth } from "../../context/AuthContext";
+import axiosInterceptor from "../../hooks/axiosInterceptor";
+import { Cuenta } from "../../Interface/Cuenta";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
+  const [cuenta, setCuenta] = useState<Cuenta | null>(null);
   const navigate = useNavigate();
+  const authcontex = useAuth();
+  const { user } = authcontex;
+
+  useEffect(() => {
+    if (user?.name) {
+      fetchData();
+    }
+  }, [user]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosInterceptor.get(
+        "/api/Usuario/username/" + user?.name
+      );
+      setCuenta(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  console.log(cuenta);
 
   function toggleDropdown() {
     setIsOpen(!isOpen);
@@ -26,13 +51,12 @@ export default function UserDropdown() {
         className="flex items-center text-gray-700 dark:text-gray-400"
       >
         <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
-          <img
-            src="http://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200"
-            alt="User"
-          />
+          <img src="/user.jpg" alt="User" />
         </span>
 
-        <span className="block mr-1 font-medium text-theme-sm">Mateo</span>
+        <span className="block mr-1 font-medium text-theme-sm">
+          {user?.name}
+        </span>
         <FaAngleDown />
       </button>
 
@@ -43,10 +67,10 @@ export default function UserDropdown() {
       >
         <div>
           <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-            Mateo nerli
+            {cuenta?.nombre} {cuenta?.apellido}
           </span>
           <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-            mnerli2003@gmail.com
+            {cuenta?.email}
           </span>
         </div>
 

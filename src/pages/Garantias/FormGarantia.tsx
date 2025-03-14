@@ -70,7 +70,7 @@ function FormGarantia() {
       : axiosInterceptor.post(`/api/garantia`, formDataToSend); // Crear
 
     apiCall
-      .then((response) => {
+      .then(() => {
         toast.success(
           isEditMode
             ? "Garantía editada con éxito"

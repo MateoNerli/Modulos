@@ -23,13 +23,13 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   // Handler for input change
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   // Handler for form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setError(""); // Limpiar errores previos
 

@@ -17,7 +17,7 @@ function FormCuenta() {
     rolCuenta: "",
     relacionamientoSGR: "",
   });
-  const [loading, setLoading] = useState(true); // Estado de carga
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
