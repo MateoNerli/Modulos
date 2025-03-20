@@ -7,6 +7,7 @@ import Label from "../form/Label";
 import { FaEdit } from "react-icons/fa";
 import axiosInterceptor from "../../hooks/axiosInterceptor";
 import { toast } from "react-toastify";
+import { Formik, Field, Form } from "formik";
 
 interface Cuenta {
   cuenta: {
@@ -40,25 +41,11 @@ export default function UserInfoCard({ cuenta }: Cuenta) {
     });
   }, [cuenta]);
 
-  const [editUserInfo, setEditUserInfo] = useState({ ...userInfo });
-
-  useEffect(() => {
-    setEditUserInfo({ ...userInfo });
-  }, [userInfo]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditUserInfo({
-      ...editUserInfo,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSave = async (values: typeof userInfo) => {
     try {
       const updatedUserInfo = {
         ...cuenta,
-        ...editUserInfo,
+        ...values,
       };
 
       const payload = {
@@ -127,35 +114,42 @@ export default function UserInfoCard({ cuenta }: Cuenta) {
               Actualiza tu información personal
             </p>
           </div>
-          <form className="flex flex-col" onSubmit={handleSave}>
-            <div className="custom-scrollbar overflow-y-auto px-2 pb-3">
-              <div className="mt-7">
-                <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                  {personalInfoKeys.map((key) => (
-                    <div key={key} className="col-span-2 lg:col-span-1">
-                      <Label>
-                        {key.charAt(0).toUpperCase() + key.slice(1)}
-                      </Label>
-                      <Input
-                        type="text"
-                        name={key}
-                        value={editUserInfo[key as keyof typeof editUserInfo]}
-                        onChange={handleChange}
-                      />
+
+          {/* Formik Form */}
+          <Formik initialValues={userInfo} onSubmit={handleSave}>
+            {({ values, handleChange }) => (
+              <Form className="flex flex-col">
+                <div className="custom-scrollbar overflow-y-auto px-2 pb-3">
+                  <div className="mt-7">
+                    <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
+                      {personalInfoKeys.map((key) => (
+                        <div key={key} className="col-span-2 lg:col-span-1">
+                          <Label>
+                            {key.charAt(0).toUpperCase() + key.slice(1)}
+                          </Label>
+                          <Field
+                            type="text"
+                            name={key}
+                            value={values[key as keyof typeof values]}
+                            onChange={handleChange}
+                            as={Input}
+                          />
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
-              <Button size="sm" variant="outline" onClick={closeModal}>
-                Cancelar
-              </Button>
-              <Button size="sm" type="submit">
-                Guardar Cambios
-              </Button>
-            </div>
-          </form>
+                <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
+                  <Button size="sm" variant="outline" onClick={closeModal}>
+                    Cancelar
+                  </Button>
+                  <Button size="sm" type="submit">
+                    Guardar Cambios
+                  </Button>
+                </div>
+              </Form>
+            )}
+          </Formik>
         </div>
       </Modal>
     </div>

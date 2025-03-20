@@ -17,6 +17,7 @@ import FormAcreedor from "../pages/Acreedor/FormAcreedor";
 import { AuthProvider } from "../context/AuthContext";
 import Unauthorized from "../pages/OtherPage/unauthorized";
 import Error500 from "../pages/OtherPage/error500";
+import Usuario from "../pages/Usuarios/Usuarios";
 
 export default function RoutesApp() {
   return (
@@ -24,7 +25,7 @@ export default function RoutesApp() {
       <Routes>
         {/* Rutas protegidas */}
         <Route element={<AppLayout />}>
-          <Route element={<PrivateRoute allowedRoles={["Usuario"]} />}>
+          <Route element={<PrivateRoute allowedRoles={["Usuario", "Admin"]} />}>
             <Route index path="/" element={<Dashboard />} />
             <Route path="/profile" element={<UserProfiles />} />
             <Route path="/garantias" element={<Garantias />} />
@@ -36,6 +37,9 @@ export default function RoutesApp() {
             <Route path="/acreedor" element={<Acreedor />} />
             <Route path="/acreedor/crear" element={<FormAcreedor />} />
             <Route path="/acreedor/editar/:id" element={<FormAcreedor />} />
+          </Route>
+          <Route element={<PrivateRoute allowedRoles={["Admin"]} />}>
+            <Route path="/usuarios" element={<Usuario />} />
           </Route>
         </Route>
 

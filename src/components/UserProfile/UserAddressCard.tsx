@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
@@ -7,6 +7,7 @@ import Label from "../form/Label";
 import { FaEdit } from "react-icons/fa";
 import axiosInterceptor from "../../hooks/axiosInterceptor";
 import { toast } from "react-toastify";
+import { useFormik } from "formik";
 
 interface Cuenta {
   cuenta: {
@@ -20,57 +21,48 @@ interface Cuenta {
 
 export default function UserAddressCard({ cuenta }: Cuenta) {
   const { isOpen, openModal, closeModal } = useModal();
-  const [direccion, setDireccion] = useState({
-    pais: cuenta.pais,
-    ciudad: cuenta.ciudad,
-    codigoPostal: cuenta.codigoPostal,
-    direccion: cuenta.direccion,
+
+  // Formik Hook
+  const formik = useFormik({
+    initialValues: {
+      pais: cuenta.pais,
+      ciudad: cuenta.ciudad,
+      codigoPostal: cuenta.codigoPostal,
+      direccion: cuenta.direccion,
+    },
+    enableReinitialize: true, // Permite inicializar los valores de nuevo si cambian
+    onSubmit: async (values) => {
+      try {
+        const payload = {
+          ...cuenta,
+          ...values,
+          IdUsuario: cuenta.idUsuario,
+        };
+
+        const response = await axiosInterceptor.post(`/api/Usuario`, payload);
+
+        console.log("Response from backend:", response.data);
+
+        if (response.status === 200) {
+          toast.success("Información actualizada correctamente");
+          closeModal();
+        } else {
+          toast.error("Error al actualizar la información");
+        }
+      } catch (error) {
+        toast.error("Error al actualizar la información" + error);
+      }
+    },
   });
 
   useEffect(() => {
-    setDireccion({
+    formik.setValues({
       pais: cuenta.pais,
       ciudad: cuenta.ciudad,
       codigoPostal: cuenta.codigoPostal,
       direccion: cuenta.direccion,
     });
   }, [cuenta]);
-
-  const [editUserInfo, setEditUserInfo] = useState({ ...direccion });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditUserInfo({
-      ...editUserInfo,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSave = async () => {
-    try {
-      const updatedUserInfo = {
-        ...cuenta,
-        ...editUserInfo,
-      };
-
-      const payload = {
-        ...updatedUserInfo,
-        IdUsuario: cuenta.idUsuario,
-      };
-      const response = await axiosInterceptor.post(`/api/Usuario`, payload);
-
-      console.log("Response from backend:", response.data);
-
-      if (response.status === 200) {
-        setDireccion(response.data);
-        toast.success("Información actualizada correctamente");
-        closeModal();
-      } else {
-        toast.error("Error al actualizar la información");
-      }
-    } catch (error) {
-      toast.error("Error al actualizar la información" + error);
-    }
-  };
 
   return (
     <>
@@ -82,7 +74,7 @@ export default function UserAddressCard({ cuenta }: Cuenta) {
             </h4>
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32">
-              {Object.entries(direccion).map(([key, value]) => (
+              {Object.entries(formik.values).map(([key, value]) => (
                 <div key={key}>
                   <p className="mb-2 text-xs text-gray-500 dark:text-gray-400">
                     {key.charAt(0).toUpperCase() + key.slice(1)}
@@ -96,10 +88,7 @@ export default function UserAddressCard({ cuenta }: Cuenta) {
           </div>
 
           <button
-            onClick={() => {
-              setEditUserInfo(direccion);
-              openModal();
-            }}
+            onClick={openModal}
             className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-gray-700 border border-gray-300 rounded-full shadow-theme-xs bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 lg:w-auto"
           >
             <FaEdit />
@@ -117,17 +106,18 @@ export default function UserAddressCard({ cuenta }: Cuenta) {
               Actualiza tu información para mantener tu perfil al día.
             </p>
           </div>
-          <form className="flex flex-col">
+          <form onSubmit={formik.handleSubmit} className="flex flex-col">
             <div className="px-2 overflow-y-auto custom-scrollbar">
               <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                {Object.entries(editUserInfo).map(([key, value]) => (
+                {Object.entries(formik.values).map(([key, value]) => (
                   <div key={key}>
                     <Label>{key.charAt(0).toUpperCase() + key.slice(1)}</Label>
                     <Input
                       type="text"
                       name={key}
                       value={value}
-                      onChange={handleChange}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                     />
                   </div>
                 ))}
@@ -137,7 +127,7 @@ export default function UserAddressCard({ cuenta }: Cuenta) {
               <Button size="sm" variant="outline" onClick={closeModal}>
                 Cerrar
               </Button>
-              <Button size="sm" onClick={handleSave}>
+              <Button size="sm" type="submit">
                 Guardar Cambios
               </Button>
             </div>

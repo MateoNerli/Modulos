@@ -5,15 +5,15 @@ interface PrivateRouteProps {
   allowedRoles: string[];
 }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ allowedRoles }) => {
+const PrivateRoute = ({ allowedRoles }: PrivateRouteProps) => {
   const { user } = useAuth();
 
   if (!user) {
-    return <Navigate to="/signin" replace />;
+    return <Navigate to="/signin" />;
   }
 
   if (!allowedRoles.includes(user.role)) {
-    return <Navigate to="/unauthorized" replace />;
+    return <Navigate to="/unauthorized" />;
   }
 
   return <Outlet />;

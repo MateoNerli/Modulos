@@ -224,7 +224,8 @@ function FormAcreedor() {
                 />
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Fecha de Carga <span className="text-red-500">*</span>
+                    Fecha de Calificacion{" "}
+                    <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="date"
@@ -241,7 +242,7 @@ function FormAcreedor() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Fecha de Carga <span className="text-red-500">*</span>
+                    Fecha de Vencimiento <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="date"
